@@ -11,17 +11,19 @@ export function AppLayoutWrapper({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  // Root Landing Page (/) is Full Width without Left Sidebar
+  // Standalone routes (Landing page and Admin routes) are 100% full-width without the candidate sidebar
   const isLandingPage = pathname === '/';
+  const isAdminRoute = pathname.startsWith('/admin');
+  const isStandaloneLayout = isLandingPage || isAdminRoute;
 
-  // Route Protection: If user is logged out on an internal route, redirect to Landing Page (/)
+  // Route Protection: If user is logged out on candidate internal routes (/dashboard, /builder, etc.), redirect to Landing Page (/)
   useEffect(() => {
-    if (!loading && !user && !isLandingPage) {
+    if (!loading && !user && !isStandaloneLayout) {
       router.push('/');
     }
-  }, [user, loading, isLandingPage, router]);
+  }, [user, loading, isStandaloneLayout, router]);
 
-  if (isLandingPage) {
+  if (isStandaloneLayout) {
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
         <Navbar />
@@ -30,7 +32,7 @@ export function AppLayoutWrapper({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Internal SaaS Dashboard pages (/dashboard, /review, /builder, etc.) have the Left Sidebar layout
+  // Internal SaaS Candidate Dashboard pages (/dashboard, /review, /builder, etc.) have the Left Candidate Sidebar layout
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
       <Navbar />

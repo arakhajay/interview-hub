@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles, Shield, Cpu, Zap, Globe } from 'lucide-react';
+import { Sparkles, Shield, Cpu, Zap } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
               <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <span className="font-bold text-lg text-white gradient-text">Magic Prompt</span>
+              <span className="font-bold text-lg text-white">THE INTERVIEW HUB</span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               All-in-One AI Career Assistant for automated resume audits, ATS score optimization, STAR bullet point rewrites, job description matching, and interactive mock interview practice.
@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
           <div>
             <h5 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3">Platform Tech</h5>
             <div className="flex flex-wrap gap-2 text-[11px] text-slate-300">
-              <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-1"><Cpu className="w-3 h-3 text-indigo-400" /> OpenAI GPT-4o</span>
+              <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-1"><Cpu className="w-3 h-3 text-indigo-400" /> Google Gemini 2.5</span>
               <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-1"><Shield className="w-3 h-3 text-emerald-400" /> Supabase DB</span>
               <span className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-1"><Zap className="w-3 h-3 text-cyan-400" /> Next.js App Router</span>
             </div>
@@ -53,11 +53,13 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-8 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 Magic Prompt AI Platform. Production Ready & Recruiter Approved.</p>
+          <p>© 2026 THE INTERVIEW HUB. Production Ready & Recruiter Approved.</p>
           <div className="flex items-center gap-4">
             <span className="hover:text-slate-300 cursor-pointer">Privacy Policy</span>
             <span className="hover:text-slate-300 cursor-pointer">Terms of Service</span>
-            <span className="hover:text-slate-300 cursor-pointer">Security</span>
+            <Link href="/admin/login" className="hover:text-purple-400 text-slate-400 font-semibold transition flex items-center gap-1">
+              <Shield className="w-3 h-3 text-purple-400" /> Admin Portal
+            </Link>
           </div>
         </div>
       </div>

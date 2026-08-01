@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { ArrowRight, Sparkles, Zap, ChevronDown } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, ShieldCheck } from 'lucide-react';
+import { GaugeMeter } from '@/components/ui/GaugeMeter';
 
 interface CinematicHeroProps {
   onOpenAuth: (mode: 'signup' | 'login') => void;
@@ -44,15 +45,22 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
     rawMouseY.set((clientY / innerHeight) - 0.5);
   };
 
-  // Particles generator
-  const particles = Array.from({ length: 28 }).map((_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: Math.random() * 6 + 4,
-    delay: Math.random() * 2,
-  }));
+  const [mounted, setMounted] = useState(false);
+  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; duration: number; delay: number }>>([]);
+
+  useEffect(() => {
+    setMounted(true);
+    setParticles(
+      Array.from({ length: 28 }).map((_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 3 + 1,
+        duration: Math.random() * 6 + 4,
+        delay: Math.random() * 2,
+      }))
+    );
+  }, []);
 
   // Framer Motion variants
   const containerVariants = {
@@ -67,8 +75,8 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
   const wordVariants = {
     hidden: {
       opacity: 0,
-      y: 50,
-      filter: 'blur(12px)',
+      y: 40,
+      filter: 'blur(10px)',
       scale: 0.96,
     },
     show: {
@@ -77,7 +85,7 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
       filter: 'blur(0px)',
       scale: 1,
       transition: {
-        duration: 0.8,
+        duration: 0.75,
         ease: [0.22, 1, 0.36, 1] as any,
       },
     },
@@ -101,15 +109,15 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
   return (
     <div
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden z-1 select-none"
+      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden select-none py-12"
     >
-      {/* Background Video */}
+      {/* Cinematic Video Background - Absolute to Hero */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover -z-20 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover -z-20 pointer-events-none opacity-40"
         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260514_135830_bb6491d1-9b66-4aec-9722-13b4dfe3fb46.mp4"
       />
 
@@ -117,7 +125,7 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
       <div
         className="absolute inset-0 -z-10 pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, rgba(2,5,20,0.45), rgba(5,8,30,0.75))',
+          background: 'linear-gradient(180deg, rgba(2,5,20,0.45), rgba(5,8,30,0.85))',
           backdropFilter: 'blur(2px)',
         }}
       />
@@ -142,7 +150,7 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
 
       {/* Decorative Particles */}
       <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-        {particles.map((pt) => (
+        {mounted && particles.map((pt) => (
           <motion.div
             key={pt.id}
             initial={{ opacity: 0.2 }}
@@ -171,13 +179,13 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
       </div>
 
       {/* Hero Content Container */}
-      <div className="max-w-[1100px] w-full mx-auto px-4 text-center flex flex-col items-center justify-center space-y-8 z-10 py-12">
+      <div className="max-w-[1100px] w-full mx-auto px-4 text-center flex flex-col items-center justify-center space-y-8 z-10">
         {/* Floating Announcement Pill with Parallax */}
         <motion.div
           style={{ x: isTouch ? 0 : pillX, y: isTouch ? 0 : pillY }}
-          initial={{ opacity: 0, y: -20, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: -25, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.7 }}
         >
           <motion.div
             animate={{ y: [0, -4, 0] }}
@@ -202,7 +210,7 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
             {headingWords.map((word, idx) => (
               <motion.span key={idx} variants={wordVariants} className="inline-block">
                 {word.gradient ? (
-                  <span className="animated-gradient-text">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-cyan-400 animated-hero-gradient">
                     {word.text}
                   </span>
                 ) : (
@@ -215,9 +223,9 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
 
         {/* Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
+          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.8, delay: 1.1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.75, delay: 1.0, ease: [0.22, 1, 0.36, 1] as any }}
           className="text-lg sm:text-[22px] max-w-[820px] text-white/80 leading-relaxed font-normal"
         >
           The ultimate AI Career Hub for job seekers — professional resume reviews, instant ATS scoring, STAR bullet rewriters and live AI mock interviews.
@@ -228,7 +236,7 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
           style={{ x: isTouch ? 0 : buttonX, y: isTouch ? 0 : buttonY }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.35 }}
+          transition={{ duration: 0.6, delay: 1.25 }}
           className="flex flex-wrap items-center justify-center gap-5 pt-2"
         >
           {user ? (
@@ -247,7 +255,6 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
                 onClick={() => onOpenAuth('signup')}
                 className="relative group px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white font-extrabold text-base shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.75)] transition-all duration-300 flex items-center gap-2.5 overflow-hidden"
               >
-                {/* Shine Sweep Animation */}
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
                 🚀 Get Started Free <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
               </motion.button>
@@ -264,40 +271,67 @@ export function CinematicHero({ onOpenAuth, user }: CinematicHeroProps) {
             </>
           )}
         </motion.div>
+
+        {/* Existing Hero Visual Mockup */}
+        <motion.div
+          initial={{ opacity: 0, y: 35 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
+          className="pt-8 w-full max-w-5xl mx-auto"
+        >
+          <div className="relative rounded-3xl p-1 bg-gradient-to-b from-indigo-500/30 via-purple-500/20 to-slate-900/80 shadow-2xl backdrop-blur-2xl">
+            <div className="rounded-[22px] bg-slate-950/90 p-6 sm:p-8 space-y-6 text-left border border-slate-800/80">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-rose-500" />
+                  <div className="w-3 h-3 rounded-full bg-amber-500" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-500" />
+                  <span className="text-xs font-mono text-slate-400 ml-2">the-interview-hub.ai/dashboard</span>
+                </div>
+                <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5" /> Taleo & Workday Approved
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                <div className="flex flex-col items-center justify-center p-4 bg-slate-900/60 rounded-2xl border border-slate-800">
+                  <GaugeMeter score={94} size={150} label="ATS Match Score" sublabel="Top 3% Candidate" />
+                </div>
+
+                <div className="lg:col-span-2 space-y-3 text-xs">
+                  <div className="flex justify-between font-bold text-slate-200">
+                    <span>STAR Impact Verbs</span>
+                    <span className="text-emerald-400">96%</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-emerald-400 rounded-full w-[96%]" />
+                  </div>
+
+                  <div className="flex justify-between font-bold text-slate-200 pt-1">
+                    <span>Technical & Cloud Keywords</span>
+                    <span className="text-cyan-400">92%</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-cyan-400 rounded-full w-[92%]" />
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-200 mt-2">
+                    <span className="font-bold text-indigo-400">AI Bullet Suggestion:</span> &quot;Architected enterprise RAG pipeline using LangChain & Vector DB, reducing query latency by 42%.&quot;
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Animated Scroll Down Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.6 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 cursor-pointer text-slate-400 hover:text-white transition"
-        onClick={() => {
-          const el = document.getElementById('features');
-          el?.scrollIntoView({ behavior: 'smooth' });
-        }}
-      >
-        <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">Scroll</span>
-        <div className="w-5 h-8 rounded-full border-2 border-white/20 flex items-start justify-center p-1">
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-1.5 h-1.5 rounded-full bg-purple-400"
-          />
-        </div>
-      </motion.div>
-
-      {/* Custom Styles for Shifting Animated Gradient */}
       <style jsx global>{`
-        .animated-gradient-text {
-          background: linear-gradient(90deg, #8B5CF6, #A855F7, #60A5FA, #06B6D4, #8B5CF6);
+        .animated-hero-gradient {
           background-size: 300% 100%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shiftGradient 8s linear infinite;
+          animation: heroShift 8s linear infinite;
         }
 
-        @keyframes shiftGradient {
+        @keyframes heroShift {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }

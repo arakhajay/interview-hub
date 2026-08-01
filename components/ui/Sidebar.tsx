@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileSearch, FileEdit, Target, Mic, Bot, History, BarChart3, User, ShieldAlert, LogOut, Zap } from 'lucide-react';
+import { LayoutDashboard, FileSearch, FileEdit, Target, Mic, Bot, History, BarChart3, User, ShieldAlert, LogOut, Zap, LifeBuoy } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -21,7 +21,7 @@ export const Sidebar: React.FC = () => {
     { label: 'Resume History', href: '/history', icon: History },
     { label: 'Analytics Hub', href: '/analytics', icon: BarChart3 },
     { label: 'User Profile', href: '/profile', icon: User },
-    { label: 'Admin Panel', href: '/admin', icon: ShieldAlert },
+    { label: 'Support & Tickets', href: '/support', icon: LifeBuoy, badge: '24/7 Help' },
   ];
 
   return (

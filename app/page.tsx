@@ -24,8 +24,6 @@ export default function LandingPage() {
 
   return (
     <div className="space-y-20 pb-16 overflow-hidden relative">
-      {/* Full Page Fixed Linked Particles Background */}
-      <LinkedParticles />
       {/* Auth Modal */}
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} initialMode={authMode} />
 
